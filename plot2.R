@@ -1,18 +1,19 @@
-## check to see if data folder has been created
+## this section downloads the data files from the web source
+## unzips the data file and puts it in a subfolder called "NEI data"
 
-if(!file.exists("power")){
-  dir.create("power")
+## check to see if data folder has been created
+if(!file.exists("NEI data")){
+  dir.create("NEI data")
 }
 
-## if no folder then download source file to data folder & unzip
 URL <- "http://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
-download.file(URL, ".\\power\\power.zip")
-unzip(".\\power\\power.zip",exdir=".\\power")
+download.file(URL, ".\\NEI data\\eleccons.zip")
+unzip(".\\NEI data\\eleccons.zip",exdir=".\\NEI data")
 
-##
-electric1 <- read.table(".\\power\\household_power_consumption.txt", sep=";", quote="\"",header=TRUE, stringsAsFactors=FALSE)
+## this line makes a data table from the donwload
+electric1 <- read.table(".\\NEI data\\household_power_consumption.txt", sep=";", quote="\"",header=TRUE, stringsAsFactors=FALSE)
 
-## this script uses dplyr() to do some of the data tidying,
+## dplyr() is used to do some of the data tidying
 ## if you have this package installed already, comment out the next line
 install.packages("dplyr")
 
@@ -33,7 +34,7 @@ electric4 <- mutate(electric4, Sub_metering_1=as.numeric(Sub_metering_1))
 electric4 <- mutate(electric4, Sub_metering_2=as.numeric(Sub_metering_2))
 electric4 <- mutate(electric4, Sub_metering_3=as.numeric(Sub_metering_3))
 
-## Plot 2 needs date&time combining (into datetime in this case)
+## Plot 2
 png("plot2.png", width=480, height=480)
 with(electric4, plot(datetime,Global_active_power,type = "l", , xlab = "", ylab = "Global Active Power (kilowatts)"))
 dev.off()
